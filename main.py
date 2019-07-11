@@ -21,6 +21,7 @@ _posY		= 12
 _velX		= 13
 _velY		= 14
 _tmp		= 15
+_input		= 16
 
 _score1		= 21
 _score2		= 22
@@ -45,8 +46,8 @@ Inst.ADDI(_score1, _num0, 0),				# score1 = 0
 Inst.ADDI(_score2, _num0, 0),				# score2 = 0
 Inst.ADDI(_counterX, _num0, 0),				# counterX = 0
 Inst.ADDI(_counterY, _num0, 0),				# counterY = 0
-Inst.ADDI(_intervalX, _num0, 1),	# interval = INIT_ITV
-Inst.ADDI(_intervalY, _num0, 1),	# interval = INIT_ITV
+Inst.ADDI(_intervalX, _num0, 3),			# interval = 1
+Inst.ADDI(_intervalY, _num0, 3),			# interval = 1
 ]
 
 
@@ -158,25 +159,47 @@ Inst.ADDI(_score1, _score1, 1),				# 	score1 += 1
 Inst.JAL(0, -4 * 83),
 
 Inst.ADDI(_counterX, _counterX, 1),
-Inst.BNE(_counterX, _intervalX, 4 * 14),
+Inst.BNE(_counterX, _intervalX, 4 * 30),
 Inst.ADDI(_counterX, _num0, 0),
 
 # ボールの反射
 # ボールの左バーでの反射
-Inst.ADDI(_tmp, _num0, 2),
-Inst.BNE(_posX, _tmp, 4 * 4),				# if posX == 2
-Inst.BNE(_posY, _barY1u, 4),				# 	if posY == barY1
+Inst.LB(_input, _addrBase, 0x49),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
+
+Inst.ADDI(_tmp, _num0, 2),					# tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
+
+Inst.BNE(_posY, _barY1u, 4 * 4),			# 	if posY == barY1
 Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.BNE(_posY, _barY1d, 4),				# 	if posY == barY1
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+
+Inst.BNE(_posY, _barY1d, 4 * 4),			# 	if posY == barY1
 Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
 # ボールの右バーでの反射
-Inst.ADDI(_tmp, _num0, 13),
-Inst.BNE(_posX, _tmp, 4 * 4),				# if posX == 13
-Inst.BNE(_posY, _barY2u, 4),				# 	if posY == barY2
+Inst.LB(_input, _addrBase, 0x4a),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0000_0001
+
+Inst.ADDI(_tmp, _num0, 13),					# tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
+
+Inst.BNE(_posY, _barY2u, 4 * 4),			# 	if posY == barY2
 Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.BNE(_posY, _barY2d, 4),				# 	if posY == barY2
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+
+Inst.BNE(_posY, _barY2d, 4 * 4),			# 	if posY == barY2
 Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
 # ボールの左右移動
 Inst.ADD(_posX, _posX, _velX),				# posX += velX
@@ -200,33 +223,33 @@ Inst.ADD(_posY, _posY, _velY),				# posY += velY
 
 # バーの座標設定
 # 1P側上移動
-Inst.LB(_tmp, _addrBase, 0x48),			# input = [addrBase + 0x48]
-Inst.ANDI(_tmp, _tmp, 0b0000_0001),		# input &= 0b0000_0001
-Inst.BEQ(_tmp, 0, 4 * 3),					# if input != 0
+Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
+Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
 Inst.ADDI(_tmp, _num0, 1),
 Inst.SUB(_barY1u, _barY1u, _tmp),			# 	barY1u -= num1
 Inst.SUB(_barY1d, _barY1d, _tmp),			# 	barY1d -= num1
 
 # 1P側上移動
-Inst.LB(_tmp, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
-Inst.ANDI(_tmp, _tmp, 0b0000_0001),		# input &= 0b0000_0001
-Inst.BEQ(_tmp, 0, 4 * 3),					# if input != 0
+Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
+Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
+Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
 Inst.ADDI(_tmp, _num0, 1),
 Inst.ADD(_barY1u, _barY1u, _tmp),			# 	barY1u += num1
 Inst.ADD(_barY1d, _barY1d, _tmp),			# 	barY1d += num1
 
 # 2P側上移動
-Inst.LB(_tmp, _addrBase, 0x48),			# input = [addrBase + 0x48]
-Inst.ANDI(_tmp, _tmp, 0b0001_0000),		# input &= 0b0001_0000
-Inst.BEQ(_tmp, 0, 4 * 3),					# if input != 0
+Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
+Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
 Inst.ADDI(_tmp, _num0, 1),
 Inst.SUB(_barY2u, _barY2u, _tmp),			# 	barY2u -= num1
 Inst.SUB(_barY2d, _barY2d, _tmp),			# 	barY2d -= num1
 
 # 2P側下移動
-Inst.LB(_tmp, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
-Inst.ANDI(_tmp, _tmp, 0b0001_0000),		# input &= 0b0001_0000
-Inst.BEQ(_tmp, 0, 4 * 3),					# if input != 0
+Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
+Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
+Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
 Inst.ADDI(_tmp, _num0, 1),
 Inst.ADD(_barY2u, _barY2u, _tmp),			# 	barY2u += num1
 Inst.ADD(_barY2d, _barY2d, _tmp),			# 	barY2d += num1
@@ -250,6 +273,8 @@ program = sys_init + game_init + game_loop + finalize
 print('sample program 3')
 for i in program :
 	print('{:08x} | {}'.format(i.gen_code(), i.gen_mnemonic()))
+
+print(len(program))
 
 # generate intel hex format
 with open(filename, 'w', encoding='utf-8') as file:
