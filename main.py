@@ -58,51 +58,51 @@ Inst.ADDI(_num1, _num0, 1),					# num1 = 1
 # Store 7seg led patterns
 Inst.LUI(_memBase, 0x1000_1000),			# memory = 0x10001000
 Inst.ADDI(_tmp, 0, 0b1111_1100), 			# 7seg: 0
-Inst.SB(_memBase, _tmp, 0x0),		
+Inst.SB(_memBase, _tmp, 0),
 Inst.ADDI(_tmp, 0, 0b0110_0000), 			# 1
-Inst.SB(_memBase, _tmp, 0x1),		
+Inst.SB(_memBase, _tmp, 1),
 Inst.ADDI(_tmp, 0, 0b1101_1010), 			# 2
-Inst.SB(_memBase, _tmp, 0x2),		
+Inst.SB(_memBase, _tmp, 2),
 Inst.ADDI(_tmp, 0, 0b1111_0010), 			# 3
-Inst.SB(_memBase, _tmp, 0x3),		
+Inst.SB(_memBase, _tmp, 3),
 Inst.ADDI(_tmp, 0, 0b0110_0110), 			# 4
-Inst.SB(_memBase, _tmp, 0x4),		
+Inst.SB(_memBase, _tmp, 4),
 Inst.ADDI(_tmp, 0, 0b1011_0110), 			# 5
-Inst.SB(_memBase, _tmp, 0x5),		
+Inst.SB(_memBase, _tmp, 5),
 Inst.ADDI(_tmp, 0, 0b1011_1110), 			# 6
-Inst.SB(_memBase, _tmp, 0x6),		
+Inst.SB(_memBase, _tmp, 6),
 Inst.ADDI(_tmp, 0, 0b1110_0000), 			# 7
-Inst.SB(_memBase, _tmp, 0x7),		
+Inst.SB(_memBase, _tmp, 7),
 Inst.ADDI(_tmp, 0, 0b1111_1110), 			# 8
-Inst.SB(_memBase, _tmp, 0x8),		
+Inst.SB(_memBase, _tmp, 8),
 Inst.ADDI(_tmp, 0, 0b1111_0110), 			# 9
-Inst.SB(_memBase, _tmp, 0x9),
+Inst.SB(_memBase, _tmp, 9),
 
 # 1P
-Inst.ADDI(_tmp, 0, 0x60), 
-Inst.SB(_addrBase, _tmp, 0x01), 
-Inst.ADDI(_tmp, 0, 0xCE), 
-Inst.SB(_addrBase, _tmp, 0x02), 
+Inst.ADDI(_tmp, 0, 0x60),
+Inst.SB(_addrBase, _tmp, 0x01),
+Inst.ADDI(_tmp, 0, 0xCE),
+Inst.SB(_addrBase, _tmp, 0x02),
 # 2P
-Inst.ADDI(_tmp, 0, 0xDA), 
-Inst.SB(_addrBase, _tmp, 0x0D), 
-Inst.ADDI(_tmp, 0, 0xCE), 
-Inst.SB(_addrBase, _tmp, 0x0E), 
+Inst.ADDI(_tmp, 0, 0xDA),
+Inst.SB(_addrBase, _tmp, 0x0D),
+Inst.ADDI(_tmp, 0, 0xCE),
+Inst.SB(_addrBase, _tmp, 0x0E),
 # Point
-Inst.ADDI(_tmp, 0, 0xCE), 
-Inst.SB(_addrBase, _tmp, 0x10), 
-Inst.SB(_addrBase, _tmp, 0x1B), 
-Inst.ADDI(_tmp, 0, 0x3A), 
-Inst.SB(_addrBase, _tmp, 0x11), 
-Inst.SB(_addrBase, _tmp, 0x1C), 
-Inst.ADDI(_tmp, 0, 0x20), 
-Inst.SB(_addrBase, _tmp, 0x12), 
-Inst.SB(_addrBase, _tmp, 0x1D), 
-Inst.ADDI(_tmp, 0, 0x2A), 
-Inst.SB(_addrBase, _tmp, 0x13), 
-Inst.SB(_addrBase, _tmp, 0x1E), 
-Inst.ADDI(_tmp, 0, 0x1E), 
-Inst.SB(_addrBase, _tmp, 0x14), 
+Inst.ADDI(_tmp, 0, 0xCE),
+Inst.SB(_addrBase, _tmp, 0x10),
+Inst.SB(_addrBase, _tmp, 0x1B),
+Inst.ADDI(_tmp, 0, 0x3A),
+Inst.SB(_addrBase, _tmp, 0x11),
+Inst.SB(_addrBase, _tmp, 0x1C),
+Inst.ADDI(_tmp, 0, 0x20),
+Inst.SB(_addrBase, _tmp, 0x12),
+Inst.SB(_addrBase, _tmp, 0x1D),
+Inst.ADDI(_tmp, 0, 0x2A),
+Inst.SB(_addrBase, _tmp, 0x13),
+Inst.SB(_addrBase, _tmp, 0x1E),
+Inst.ADDI(_tmp, 0, 0x1E),
+Inst.SB(_addrBase, _tmp, 0x14),
 Inst.SB(_addrBase, _tmp, 0x1F)
 ]
 
@@ -212,7 +212,7 @@ Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
 Inst.ADDI(_tmp, _num0, 0),
 Inst.BNE(_posX, _tmp, 4 * 2),				# if posX == 0
 Inst.ADDI(_score2, _score2, 1),				# 	score2 += 1
-Inst.JAL(0, -4 * 85),										
+Inst.JAL(0, -4 * 85),
 
 Inst.ADDI(_tmp, _num0, 15),
 Inst.BNE(_posX, _tmp, 4 * 2),				# if posX == 15
@@ -343,10 +343,10 @@ Inst.SB(_addrBase,0,0x1F),
 Inst.SB(_addrBase,0,0x21),
 Inst.SB(_addrBase,0,0x2E),
 
-Inst.ANDI(_pattern0,_pattern0, 0),	
-Inst.ANDI(_pattern1,_pattern1, 0),
-Inst.ANDI(_pattern2,_pattern2, 0),	
-Inst.ANDI(_pattern3,_pattern3, 0),	
+Inst.ANDI(_pattern0,_pattern0, 0),			# pattern0 = 0
+Inst.ANDI(_pattern1,_pattern1, 0),			# pattern1 = 0
+Inst.ANDI(_pattern2,_pattern2, 0),			# pattern2 = 0
+Inst.ANDI(_pattern3,_pattern3, 0),			# pattern3 = 0
 
 Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
@@ -359,21 +359,21 @@ Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
 win_loop = [
 
 #2P
-Inst.ADDI(_pattern0, _num0, 0b00011100), 
-Inst.SLLI(_pattern0, _pattern0, 0x8), 
-Inst.ADDI(_pattern0, _pattern0, 0b00011000), 
+Inst.ADDI(_pattern0, _num0, 0b0001_1100),
+Inst.SLLI(_pattern0, _pattern0, 0x8),
+Inst.ADDI(_pattern0, _pattern0, 0b0001_1000),
 
-Inst.ADDI(_pattern1, _num0, 0b00100100), 
-Inst.SLLI(_pattern1, _pattern1, 0x8), 
-Inst.ADDI(_pattern1, _pattern1, 0b00100100), 
+Inst.ADDI(_pattern1, _num0, 0b0010_0100),
+Inst.SLLI(_pattern1, _pattern1, 0x8),
+Inst.ADDI(_pattern1, _pattern1, 0b0010_0100),
 
-Inst.ADDI(_pattern2, _num0, 0b00011100), 
-Inst.SLLI(_pattern2, _pattern2, 0x8), 
-Inst.ADDI(_pattern2, _pattern2, 0b00010000), 
+Inst.ADDI(_pattern2, _num0, 0b0001_1100),
+Inst.SLLI(_pattern2, _pattern2, 0x8),
+Inst.ADDI(_pattern2, _pattern2, 0b0001_0000),
 
-Inst.ADDI(_pattern3, _num0, 0b00000100), 
-Inst.SLLI(_pattern3, _pattern3, 0x8), 
-Inst.ADDI(_pattern3, _pattern3, 0b00111100), 
+Inst.ADDI(_pattern3, _num0, 0b0000_0100),
+Inst.SLLI(_pattern3, _pattern3, 0x8),
+Inst.ADDI(_pattern3, _pattern3, 0b0011_1100),
 
 Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
@@ -383,24 +383,24 @@ Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
 #時間稼ぎ
 Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
 Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -8),
+Inst.BNE(_tmp, _num0, -4 * 2),
 
 #WIN
-Inst.ADDI(_pattern0, 0, 0b10010010), 
-Inst.SLLI(_pattern0, _pattern0, 0x8), 
-Inst.ADDI(_pattern0, _pattern0, 0b10010101), 
+Inst.ADDI(_pattern0, 0, 0b1001_0010),
+Inst.SLLI(_pattern0, _pattern0, 0x8),
+Inst.ADDI(_pattern0, _pattern0, 0b1001_0101),
 
-Inst.ADDI(_pattern1, 0, 0b10010110), 
-Inst.SLLI(_pattern1, _pattern1, 0x8), 
-Inst.ADDI(_pattern1, _pattern1, 0b10010101), 
+Inst.ADDI(_pattern1, 0, 0b1001_0110),
+Inst.SLLI(_pattern1, _pattern1, 0x8),
+Inst.ADDI(_pattern1, _pattern1, 0b1001_0101),
 
-Inst.ADDI(_pattern2, 0, 0b00011010), 
-Inst.SLLI(_pattern2, _pattern2, 0x8), 
-Inst.ADDI(_pattern2, _pattern2, 0b10010101), 
+Inst.ADDI(_pattern2, 0, 0b0001_1010),
+Inst.SLLI(_pattern2, _pattern2, 0x8),
+Inst.ADDI(_pattern2, _pattern2, 0b1001_0101),
 
-Inst.ADDI(_pattern3, 0, 0b10010010), 
-Inst.SLLI(_pattern3, _pattern3, 0x8), 
-Inst.ADDI(_pattern3, _pattern3, 0b10001010), 
+Inst.ADDI(_pattern3, 0, 0b1001_0010),
+Inst.SLLI(_pattern3, _pattern3, 0x8),
+Inst.ADDI(_pattern3, _pattern3, 0b1000_1010),
 
 Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
@@ -410,7 +410,7 @@ Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
 #時間稼ぎ
 Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
 Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -8),
+Inst.BNE(_tmp, _num0, -4 * 2),
 
 ]
 
@@ -426,11 +426,9 @@ program = sys_init + game_init + game_loop + game_finalize + win_init + win_loop
 
 # generate assembly
 #print('')
-print('sample program 3')
-for i in program :
-	print('{:08x} | {}'.format(i.gen_code(), i.gen_mnemonic()))
-
-print(len(program))
+print('program')
+for idx, p in enumerate(program) :
+	print('{:4d}: {:08x} | {}'.format(idx + 1, p.gen_code(), p.gen_mnemonic()))
 
 # generate intel hex format
 with open(filename, 'w', encoding='utf-8') as file:
