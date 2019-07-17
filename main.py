@@ -5,6 +5,8 @@ from inst import Inst
 filename = 'program.hex'
 
 
+DISPLAY_INTERVAL = 360
+
 _num0		= 0
 _wr			= 1
 _barY1u		= 2
@@ -30,7 +32,6 @@ _counterX	= 23
 _intervalX	= 24
 _counterY	= 25
 _intervalY	= 26
-
 _memAddr	= 27
 _memBase	= 28
 
@@ -115,12 +116,12 @@ Inst.ADDI(_posY, _num0, 1),					# posY = 1
 # ループ部分
 game_loop = [
 # スコア表示
-Inst.ADD(_memAddr, _score1, _memBase),
-Inst.LB(_tmp, _memAddr, 0),
-Inst.SB(_addrBase, _tmp, 0x21),
-Inst.ADD(_memAddr, _score2, _memBase),
-Inst.LB(_tmp, _memAddr, 0),
-Inst.SB(_addrBase, _tmp, 0x2E),
+Inst.ADD(_memAddr, _score1, _memBase),		# [memAddr + memBase] = score1
+Inst.LB(_tmp, _memAddr, 0),					# tmp = [memAddr]
+Inst.SB(_addrBase, _tmp, 0x21),				# [addrBase + 0x21] = tmp
+Inst.ADD(_memAddr, _score2, _memBase),		# [memAddr + memBase] = score1
+Inst.LB(_tmp, _memAddr, 0),					# tmp = [memAddr]
+Inst.SB(_addrBase, _tmp, 0x2E),				# [addrBase + 0x21] = tmp
 
 # パターン初期化
 Inst.ADDI(_pattern0, _num0, 0),				# pattern0 = 0
@@ -218,51 +219,51 @@ Inst.BNE(_posX, _tmp, 4 * 2),				# if posX == 15
 Inst.ADDI(_score1, _score1, 1),				# 	score1 += 1
 Inst.JAL(0, -4 * 88),
 
-Inst.ADDI(_counterX, _counterX, 1),
-Inst.BNE(_counterX, _intervalX, 4 * 30),
-Inst.ADDI(_counterX, _num0, 0),
+Inst.ADDI(_counterX, _counterX, 1),			# counterX += 1
+Inst.BNE(_counterX, _intervalX, 4 * 30),	# if counterX == intervalX
+Inst.ADDI(_counterX, _num0, 0),				#	counterX = 0
 
 # ボールの反射
 # ボールの左バーでの反射
-Inst.LB(_input, _addrBase, 0x49),			# input = [addrBase + 0x48]
-Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
+Inst.LB(_input, _addrBase, 0x49),			# 	input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0000_0001),		# 	input &= 0b0000_0001
 
-Inst.ADDI(_tmp, _num0, 2),					# tmp = 2
-Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
+Inst.ADDI(_tmp, _num0, 2),					# 	tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# 	if posX == tmp
 
-Inst.BNE(_posY, _barY1u, 4 * 4),			# 	if posY == barY1
-Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+Inst.BNE(_posY, _barY1u, 4 * 4),			# 		if posY == barY1
+Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
 
-Inst.BNE(_posY, _barY1d, 4 * 4),			# 	if posY == barY1
-Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+Inst.BNE(_posY, _barY1d, 4 * 4),			# 		if posY == barY1
+Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
 
 # ボールの右バーでの反射
-Inst.LB(_input, _addrBase, 0x4a),			# input = [addrBase + 0x48]
-Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0000_0001
+Inst.LB(_input, _addrBase, 0x4a),			# 	input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0001_0000),		# 	input &= 0b0000_0001
 
-Inst.ADDI(_tmp, _num0, 13),					# tmp = 2
-Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
+Inst.ADDI(_tmp, _num0, 13),					# 	tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# 	if posX == tmp
 
-Inst.BNE(_posY, _barY2u, 4 * 4),			# 	if posY == barY2
-Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+Inst.BNE(_posY, _barY2u, 4 * 4),			# 		if posY == barY2
+Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
 
-Inst.BNE(_posY, _barY2d, 4 * 4),			# 	if posY == barY2
-Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
+Inst.BNE(_posY, _barY2d, 4 * 4),			# 		if posY == barY2
+Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
 
 # ボールの左右移動
-Inst.ADD(_posX, _posX, _velX),				# posX += velX
+Inst.ADD(_posX, _posX, _velX),				# 	posX += velX
 
 Inst.ADDI(_counterY, _counterY, 1),			# conterY += 1
 Inst.BNE(_counterY, _intervalY, 4 * 8),		# if counterY == intervalY
@@ -270,15 +271,15 @@ Inst.ADDI(_counterY, _num0, 0),				# 	counter = 0
 
 # ボールの上反射
 Inst.ADDI(_tmp, _num0, 0),
-Inst.BNE(_posY, _tmp, 4),					# if posY == 0
-Inst.SUB(_velY, 0, _velY),					# 	velY = 0 - velY
+Inst.BNE(_posY, _tmp, 4),					# 	if posY == 0
+Inst.SUB(_velY, 0, _velY),					# 		velY = 0 - velY
 
-# ボールの下反射
+# 	ボールの下反射
 Inst.ADDI(_tmp, _num0, 3),
-Inst.BNE(_posY, _tmp, 4),				 	# if posY == 3
-Inst.SUB(_velY, 0, _velY),					# 	velY = 0 - velY
+Inst.BNE(_posY, _tmp, 4),			 		# 	if posY == 3
+Inst.SUB(_velY, 0, _velY),					# 		velY = 0 - velY
 
-Inst.ADD(_posY, _posY, _velY),				# posY += velY
+Inst.ADD(_posY, _posY, _velY),				# 	posY += velY
 
 
 # バーの座標設定
@@ -286,49 +287,45 @@ Inst.ADD(_posY, _posY, _velY),				# posY += velY
 Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
 Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADDI(_tmp, _num0, 1),
-Inst.SUB(_barY1u, _barY1u, _tmp),			# 	barY1u -= num1
-Inst.SUB(_barY1d, _barY1d, _tmp),			# 	barY1d -= num1
+Inst.SUB(_barY1u, _barY1u, _num1),			# 	barY1u -= 1
+Inst.SUB(_barY1d, _barY1d, _num1),			# 	barY1d -= 1
 
 # 1P側上移動
 Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
 Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADDI(_tmp, _num0, 1),
-Inst.ADD(_barY1u, _barY1u, _tmp),			# 	barY1u += num1
-Inst.ADD(_barY1d, _barY1d, _tmp),			# 	barY1d += num1
+Inst.ADD(_barY1u, _barY1u, _num1),			# 	barY1u += 1
+Inst.ADD(_barY1d, _barY1d, _num1),			# 	barY1d += 1
 
 # 2P側上移動
 Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
 Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADDI(_tmp, _num0, 1),
-Inst.SUB(_barY2u, _barY2u, _tmp),			# 	barY2u -= num1
-Inst.SUB(_barY2d, _barY2d, _tmp),			# 	barY2d -= num1
+Inst.SUB(_barY2u, _barY2u, _num1),			# 	barY2u -= 1
+Inst.SUB(_barY2d, _barY2d, _num1),			# 	barY2d -= 1
 
 # 2P側下移動
 Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
 Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADDI(_tmp, _num0, 1),
-Inst.ADD(_barY2u, _barY2u, _tmp),			# 	barY2u += num1
-Inst.ADD(_barY2d, _barY2d, _tmp),			# 	barY2d += num1
+Inst.ADD(_barY2u, _barY2u, _num1),			# 	barY2u += 1
+Inst.ADD(_barY2d, _barY2d, _num1),			# 	barY2d += 1
 
+Inst.ADDI(_tmp, _num0, 3),
+Inst.BEQ(_score1, _tmp, 4 * 2),				# if score1 == tmp -> win_initへ
+Inst.BEQ(_score2, _tmp, 4 * 1),				# if score2 == tmp -> win_initへ
 ]
 
 
 # 最後
-finalize = [
-Inst.ADDI(_tmp, _num0, 3),
-Inst.BEQ(_score1, _tmp, 4*2), 
-Inst.BEQ(_score2, _tmp, 4*1), 
+game_finalize = [
 # ループの先頭に戻る
 Inst.JAL(0, -4 * ( len(game_loop) + 4 ) )
 ]
 
 
-perform = [
-
+# 勝利演出初期化
+win_init = [
 Inst.SB(_addrBase,0,0x01),
 Inst.SB(_addrBase,0,0x02),
 Inst.SB(_addrBase,0,0x0D),
@@ -355,65 +352,77 @@ Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
 Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
 Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
-
-#WIN
-Inst.ADDI(_pattern0,0,0b10010010),
-Inst.SLLI(_pattern0,_pattern0,0x8),
-Inst.ADDI(_pattern0,_pattern0,0b10010101),
-
-Inst.ADDI(_pattern1,0,0b10010110),
-Inst.SLLI(_pattern1,_pattern1,0x8),
-Inst.ADDI(_pattern1,_pattern1,0b10010101),
-
-Inst.ADDI(_pattern2,0,0b00011010),
-Inst.SLLI(_pattern2,_pattern2,0x8),
-Inst.ADDI(_pattern2,_pattern2,0b10010101),
-
-Inst.ADDI(_pattern3,0,0b10010010),
-Inst.SLLI(_pattern3,_pattern3,0x8),
-Inst.ADDI(_pattern3,_pattern3,0b10001010),
-
-Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
-Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
-Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
-Inst.SH(_addrBase, _pattern3, 0x46),			# [addrBase + 0x46] = pattern3
-
-#時間稼ぎ
-Inst.ADDI(_tmp, _num0, 320),
-Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -8),
-
-#2P
-Inst.ADDI(_pattern0,0,0b00011100),
-Inst.SLLI(_pattern0,_pattern0,0x8),
-Inst.ADDI(_pattern0,_pattern0,0b00011000),
-
-Inst.ADDI(_pattern1,0,0b00100100),
-Inst.SLLI(_pattern1,_pattern1,0x8),
-Inst.ADDI(_pattern1,_pattern1,0b00100100),
-
-Inst.ADDI(_pattern2,0,0b00011100),
-Inst.SLLI(_pattern2,_pattern2,0x8),
-Inst.ADDI(_pattern2,_pattern2,0b00010000),
-
-Inst.ADDI(_pattern3,0,0b00000100),
-Inst.SLLI(_pattern3,_pattern3,0x8),
-Inst.ADDI(_pattern3,_pattern3,0b00111100),
-
-Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
-Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
-Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
-Inst.SH(_addrBase, _pattern3, 0x46),			# [addrBase + 0x46] = pattern3
-
-#時間稼ぎ
-Inst.ADDI(_tmp, _num0, 320),
-Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -8),
-
-Inst.JAL(0, -4 * 40 )
 ]
 
-program = sys_init + game_init + game_loop + finalize + perform
+
+# 勝利演出ループ
+win_loop = [
+
+#2P
+Inst.ADDI(_pattern0, _num0, 0b00011100), 
+Inst.SLLI(_pattern0, _pattern0, 0x8), 
+Inst.ADDI(_pattern0, _pattern0, 0b00011000), 
+
+Inst.ADDI(_pattern1, _num0, 0b00100100), 
+Inst.SLLI(_pattern1, _pattern1, 0x8), 
+Inst.ADDI(_pattern1, _pattern1, 0b00100100), 
+
+Inst.ADDI(_pattern2, _num0, 0b00011100), 
+Inst.SLLI(_pattern2, _pattern2, 0x8), 
+Inst.ADDI(_pattern2, _pattern2, 0b00010000), 
+
+Inst.ADDI(_pattern3, _num0, 0b00000100), 
+Inst.SLLI(_pattern3, _pattern3, 0x8), 
+Inst.ADDI(_pattern3, _pattern3, 0b00111100), 
+
+Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
+Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
+Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
+Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
+
+#時間稼ぎ
+Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
+Inst.SUB(_tmp, _tmp, _num1),
+Inst.BNE(_tmp, _num0, -8),
+
+#WIN
+Inst.ADDI(_pattern0, 0, 0b10010010), 
+Inst.SLLI(_pattern0, _pattern0, 0x8), 
+Inst.ADDI(_pattern0, _pattern0, 0b10010101), 
+
+Inst.ADDI(_pattern1, 0, 0b10010110), 
+Inst.SLLI(_pattern1, _pattern1, 0x8), 
+Inst.ADDI(_pattern1, _pattern1, 0b10010101), 
+
+Inst.ADDI(_pattern2, 0, 0b00011010), 
+Inst.SLLI(_pattern2, _pattern2, 0x8), 
+Inst.ADDI(_pattern2, _pattern2, 0b10010101), 
+
+Inst.ADDI(_pattern3, 0, 0b10010010), 
+Inst.SLLI(_pattern3, _pattern3, 0x8), 
+Inst.ADDI(_pattern3, _pattern3, 0b10001010), 
+
+Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
+Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
+Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
+Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
+
+#時間稼ぎ
+Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
+Inst.SUB(_tmp, _tmp, _num1),
+Inst.BNE(_tmp, _num0, -8),
+
+]
+
+win_finalize = [
+Inst.JAL(0, -4 * (len(win_loop) + 2) )
+]
+
+sys_finalize = [
+
+]
+
+program = sys_init + game_init + game_loop + game_finalize + win_init + win_loop + win_finalize + sys_finalize
 
 # generate assembly
 #print('')
