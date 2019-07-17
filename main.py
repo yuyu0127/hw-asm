@@ -5,8 +5,6 @@ from inst import Inst
 filename = 'program.hex'
 
 
-DISPLAY_INTERVAL = 360
-
 _num0		= 0
 _wr			= 1
 _barY1u		= 2
@@ -32,8 +30,11 @@ _counterX	= 23
 _intervalX	= 24
 _counterY	= 25
 _intervalY	= 26
+
 _memAddr	= 27
 _memBase	= 28
+_count		= 29
+_tmp2		= 30
 
 # 初期化部分
 sys_init = [
@@ -58,51 +59,89 @@ Inst.ADDI(_num1, _num0, 1),					# num1 = 1
 # Store 7seg led patterns
 Inst.LUI(_memBase, 0x1000_1000),			# memory = 0x10001000
 Inst.ADDI(_tmp, 0, 0b1111_1100), 			# 7seg: 0
-Inst.SB(_memBase, _tmp, 0),
+Inst.SB(_memBase, _tmp, 0x0),		
 Inst.ADDI(_tmp, 0, 0b0110_0000), 			# 1
-Inst.SB(_memBase, _tmp, 1),
+Inst.SB(_memBase, _tmp, 0x1),		
 Inst.ADDI(_tmp, 0, 0b1101_1010), 			# 2
-Inst.SB(_memBase, _tmp, 2),
+Inst.SB(_memBase, _tmp, 0x2),		
 Inst.ADDI(_tmp, 0, 0b1111_0010), 			# 3
-Inst.SB(_memBase, _tmp, 3),
+Inst.SB(_memBase, _tmp, 0x3),		
 Inst.ADDI(_tmp, 0, 0b0110_0110), 			# 4
-Inst.SB(_memBase, _tmp, 4),
+Inst.SB(_memBase, _tmp, 0x4),		
 Inst.ADDI(_tmp, 0, 0b1011_0110), 			# 5
-Inst.SB(_memBase, _tmp, 5),
+Inst.SB(_memBase, _tmp, 0x5),		
 Inst.ADDI(_tmp, 0, 0b1011_1110), 			# 6
-Inst.SB(_memBase, _tmp, 6),
+Inst.SB(_memBase, _tmp, 0x6),		
 Inst.ADDI(_tmp, 0, 0b1110_0000), 			# 7
-Inst.SB(_memBase, _tmp, 7),
+Inst.SB(_memBase, _tmp, 0x7),		
 Inst.ADDI(_tmp, 0, 0b1111_1110), 			# 8
-Inst.SB(_memBase, _tmp, 8),
+Inst.SB(_memBase, _tmp, 0x8),		
 Inst.ADDI(_tmp, 0, 0b1111_0110), 			# 9
-Inst.SB(_memBase, _tmp, 9),
+Inst.SB(_memBase, _tmp, 0x9),
+
+
+Inst.ADDI(_tmp, 0, 0xF2), # 7seg: 0
+Inst.ADDI(_count, _num0, 64),
+Inst.ADDI(_tmp2, _addrBase, 0),
+Inst.SB(_tmp2, _tmp, 0),
+Inst.ADDI(_tmp2, _tmp2, 1),
+Inst.SUB(_count, _count, _num1),
+Inst.BEQ(_count, _num0, 4),
+Inst.JAL(0, -4 * 5),
+
+Inst.ADDI(_tmp, 0, 0xDA), # 7seg: 0
+Inst.ADDI(_count, _num0, 64),
+Inst.ADDI(_tmp2, _addrBase, 0),
+Inst.SB(_tmp2, _tmp, 0),
+Inst.ADDI(_tmp2, _tmp2, 1),
+Inst.SUB(_count, _count, _num1),
+Inst.BEQ(_count, _num0, 4),
+Inst.JAL(0, -4 * 5),
+
+Inst.ADDI(_tmp, 0, 0x60), # 7seg: 0
+Inst.ADDI(_count, _num0, 64),
+Inst.ADDI(_tmp2, _addrBase, 0),
+Inst.SB(_tmp2, _tmp, 0),
+Inst.ADDI(_tmp2, _tmp2, 1),
+Inst.SUB(_count, _count, _num1),
+Inst.BEQ(_count, _num0, 4),
+Inst.JAL(0, -4 * 5),
+
+Inst.ADDI(_tmp, 0, 0x00), # 7seg: 0
+Inst.ADDI(_count, _num0, 64),
+Inst.ADDI(_tmp2, _addrBase, 0),
+Inst.SB(_tmp2, _tmp, 0),
+Inst.ADDI(_tmp2, _tmp2, 1),
+Inst.SUB(_count, _count, _num1),
+Inst.BEQ(_count, _num0, 4),
+Inst.JAL(0, -4 * 5),
+
 
 # 1P
-Inst.ADDI(_tmp, 0, 0x60),
-Inst.SB(_addrBase, _tmp, 0x01),
-Inst.ADDI(_tmp, 0, 0xCE),
-Inst.SB(_addrBase, _tmp, 0x02),
+Inst.ADDI(_tmp, 0, 0x60), 
+Inst.SB(_addrBase, _tmp, 0x01), 
+Inst.ADDI(_tmp, 0, 0xCE), 
+Inst.SB(_addrBase, _tmp, 0x02), 
 # 2P
-Inst.ADDI(_tmp, 0, 0xDA),
-Inst.SB(_addrBase, _tmp, 0x0D),
-Inst.ADDI(_tmp, 0, 0xCE),
-Inst.SB(_addrBase, _tmp, 0x0E),
+Inst.ADDI(_tmp, 0, 0xDA), 
+Inst.SB(_addrBase, _tmp, 0x0D), 
+Inst.ADDI(_tmp, 0, 0xCE), 
+Inst.SB(_addrBase, _tmp, 0x0E), 
 # Point
-Inst.ADDI(_tmp, 0, 0xCE),
-Inst.SB(_addrBase, _tmp, 0x10),
-Inst.SB(_addrBase, _tmp, 0x1B),
-Inst.ADDI(_tmp, 0, 0x3A),
-Inst.SB(_addrBase, _tmp, 0x11),
-Inst.SB(_addrBase, _tmp, 0x1C),
-Inst.ADDI(_tmp, 0, 0x20),
-Inst.SB(_addrBase, _tmp, 0x12),
-Inst.SB(_addrBase, _tmp, 0x1D),
-Inst.ADDI(_tmp, 0, 0x2A),
-Inst.SB(_addrBase, _tmp, 0x13),
-Inst.SB(_addrBase, _tmp, 0x1E),
-Inst.ADDI(_tmp, 0, 0x1E),
-Inst.SB(_addrBase, _tmp, 0x14),
+Inst.ADDI(_tmp, 0, 0xCE), 
+Inst.SB(_addrBase, _tmp, 0x10), 
+Inst.SB(_addrBase, _tmp, 0x1B), 
+Inst.ADDI(_tmp, 0, 0x3A), 
+Inst.SB(_addrBase, _tmp, 0x11), 
+Inst.SB(_addrBase, _tmp, 0x1C), 
+Inst.ADDI(_tmp, 0, 0x20), 
+Inst.SB(_addrBase, _tmp, 0x12), 
+Inst.SB(_addrBase, _tmp, 0x1D), 
+Inst.ADDI(_tmp, 0, 0x2A), 
+Inst.SB(_addrBase, _tmp, 0x13), 
+Inst.SB(_addrBase, _tmp, 0x1E), 
+Inst.ADDI(_tmp, 0, 0x1E), 
+Inst.SB(_addrBase, _tmp, 0x14), 
 Inst.SB(_addrBase, _tmp, 0x1F)
 ]
 
@@ -116,12 +155,12 @@ Inst.ADDI(_posY, _num0, 1),					# posY = 1
 # ループ部分
 game_loop = [
 # スコア表示
-Inst.ADD(_memAddr, _score1, _memBase),		# [memAddr + memBase] = score1
-Inst.LB(_tmp, _memAddr, 0),					# tmp = [memAddr]
-Inst.SB(_addrBase, _tmp, 0x21),				# [addrBase + 0x21] = tmp
-Inst.ADD(_memAddr, _score2, _memBase),		# [memAddr + memBase] = score1
-Inst.LB(_tmp, _memAddr, 0),					# tmp = [memAddr]
-Inst.SB(_addrBase, _tmp, 0x2E),				# [addrBase + 0x21] = tmp
+Inst.ADD(_memAddr, _score1, _memBase),
+Inst.LB(_tmp, _memAddr, 0),
+Inst.SB(_addrBase, _tmp, 0x21),
+Inst.ADD(_memAddr, _score2, _memBase),
+Inst.LB(_tmp, _memAddr, 0),
+Inst.SB(_addrBase, _tmp, 0x2E),
 
 # パターン初期化
 Inst.ADDI(_pattern0, _num0, 0),				# pattern0 = 0
@@ -210,60 +249,66 @@ Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
 
 # 得点処理
 Inst.ADDI(_tmp, _num0, 0),
-Inst.BNE(_posX, _tmp, 4 * 2),				# if posX == 0
+Inst.BNE(_posX, _tmp, 4 * 5),				# if posX == 0
 Inst.ADDI(_score2, _score2, 1),				# 	score2 += 1
-Inst.JAL(0, -4 * 85),
+Inst.ADDI(_tmp, _num0, 400),
+Inst.SUB(_tmp, _tmp, _num1),
+Inst.BNE(_tmp, _num0, -8),
+Inst.JAL(0, -4 * 87),										
 
 Inst.ADDI(_tmp, _num0, 15),
-Inst.BNE(_posX, _tmp, 4 * 2),				# if posX == 15
+Inst.BNE(_posX, _tmp, 4 * 5),				# if posX == 15
 Inst.ADDI(_score1, _score1, 1),				# 	score1 += 1
-Inst.JAL(0, -4 * 88),
+Inst.ADDI(_tmp, _num0, 400),
+Inst.SUB(_tmp, _tmp, _num1),
+Inst.BNE(_tmp, _num0, -8),
+Inst.JAL(0, -4 * 94),
 
-Inst.ADDI(_counterX, _counterX, 1),			# counterX += 1
-Inst.BNE(_counterX, _intervalX, 4 * 30),	# if counterX == intervalX
-Inst.ADDI(_counterX, _num0, 0),				#	counterX = 0
+Inst.ADDI(_counterX, _counterX, 1),
+Inst.BNE(_counterX, _intervalX, 4 * 30),
+Inst.ADDI(_counterX, _num0, 0),
 
 # ボールの反射
 # ボールの左バーでの反射
-Inst.LB(_input, _addrBase, 0x49),			# 	input = [addrBase + 0x48]
-Inst.ANDI(_input, _input, 0b0000_0001),		# 	input &= 0b0000_0001
+Inst.LB(_input, _addrBase, 0x49),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
 
-Inst.ADDI(_tmp, _num0, 2),					# 	tmp = 2
-Inst.BNE(_posX, _tmp, 4 * 10),				# 	if posX == tmp
+Inst.ADDI(_tmp, _num0, 2),					# tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
 
-Inst.BNE(_posY, _barY1u, 4 * 4),			# 		if posY == barY1
-Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
+Inst.BNE(_posY, _barY1u, 4 * 4),			# 	if posY == barY1
+Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
-Inst.BNE(_posY, _barY1d, 4 * 4),			# 		if posY == barY1
-Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
+Inst.BNE(_posY, _barY1d, 4 * 4),			# 	if posY == barY1
+Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
 # ボールの右バーでの反射
-Inst.LB(_input, _addrBase, 0x4a),			# 	input = [addrBase + 0x48]
-Inst.ANDI(_input, _input, 0b0001_0000),		# 	input &= 0b0000_0001
+Inst.LB(_input, _addrBase, 0x4a),			# input = [addrBase + 0x48]
+Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0000_0001
 
-Inst.ADDI(_tmp, _num0, 13),					# 	tmp = 2
-Inst.BNE(_posX, _tmp, 4 * 10),				# 	if posX == tmp
+Inst.ADDI(_tmp, _num0, 13),					# tmp = 2
+Inst.BNE(_posX, _tmp, 4 * 10),				# if posX == tmp
 
-Inst.BNE(_posY, _barY2u, 4 * 4),			# 		if posY == barY2
-Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
+Inst.BNE(_posY, _barY2u, 4 * 4),			# 	if posY == barY2
+Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
-Inst.BNE(_posY, _barY2d, 4 * 4),			# 		if posY == barY2
-Inst.SUB(_velX, 0, _velX),					# 			velX = 0 - velX
-Inst.ADDI(_intervalX, _num0, 3),			#			intervalX = 3
-Inst.BEQ(_input, 0, 4 * 1),					# 			if input != 0
-Inst.ADDI(_intervalX, _num0, 1),			#				intervalX = 1
+Inst.BNE(_posY, _barY2d, 4 * 4),			# 	if posY == barY2
+Inst.SUB(_velX, 0, _velX),					# 		velX = 0 - velX
+Inst.ADDI(_intervalX, _num0, 3),			#		intervalX = 3
+Inst.BEQ(_input, 0, 4 * 1),					# 		if input != 0
+Inst.ADDI(_intervalX, _num0, 1),			#			intervalX = 1
 
 # ボールの左右移動
-Inst.ADD(_posX, _posX, _velX),				# 	posX += velX
+Inst.ADD(_posX, _posX, _velX),				# posX += velX
 
 Inst.ADDI(_counterY, _counterY, 1),			# conterY += 1
 Inst.BNE(_counterY, _intervalY, 4 * 8),		# if counterY == intervalY
@@ -271,15 +316,15 @@ Inst.ADDI(_counterY, _num0, 0),				# 	counter = 0
 
 # ボールの上反射
 Inst.ADDI(_tmp, _num0, 0),
-Inst.BNE(_posY, _tmp, 4),					# 	if posY == 0
-Inst.SUB(_velY, 0, _velY),					# 		velY = 0 - velY
+Inst.BNE(_posY, _tmp, 4),					# if posY == 0
+Inst.SUB(_velY, 0, _velY),					# 	velY = 0 - velY
 
-# 	ボールの下反射
+# ボールの下反射
 Inst.ADDI(_tmp, _num0, 3),
-Inst.BNE(_posY, _tmp, 4),			 		# 	if posY == 3
-Inst.SUB(_velY, 0, _velY),					# 		velY = 0 - velY
+Inst.BNE(_posY, _tmp, 4),				 	# if posY == 3
+Inst.SUB(_velY, 0, _velY),					# 	velY = 0 - velY
 
-Inst.ADD(_posY, _posY, _velY),				# 	posY += velY
+Inst.ADD(_posY, _posY, _velY),				# posY += velY
 
 
 # バーの座標設定
@@ -287,85 +332,113 @@ Inst.ADD(_posY, _posY, _velY),				# 	posY += velY
 Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
 Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.SUB(_barY1u, _barY1u, _num1),			# 	barY1u -= 1
-Inst.SUB(_barY1d, _barY1d, _num1),			# 	barY1d -= 1
+Inst.ADDI(_tmp, _num0, 1),
+Inst.SUB(_barY1u, _barY1u, _tmp),			# 	barY1u -= num1
+Inst.SUB(_barY1d, _barY1d, _tmp),			# 	barY1d -= num1
 
 # 1P側上移動
 Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
 Inst.ANDI(_input, _input, 0b0000_0001),		# input &= 0b0000_0001
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADD(_barY1u, _barY1u, _num1),			# 	barY1u += 1
-Inst.ADD(_barY1d, _barY1d, _num1),			# 	barY1d += 1
+Inst.ADDI(_tmp, _num0, 1),
+Inst.ADD(_barY1u, _barY1u, _tmp),			# 	barY1u += num1
+Inst.ADD(_barY1d, _barY1d, _tmp),			# 	barY1d += num1
 
 # 2P側上移動
 Inst.LB(_input, _addrBase, 0x48),			# input = [addrBase + 0x48]
 Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.SUB(_barY2u, _barY2u, _num1),			# 	barY2u -= 1
-Inst.SUB(_barY2d, _barY2d, _num1),			# 	barY2d -= 1
+Inst.ADDI(_tmp, _num0, 1),
+Inst.SUB(_barY2u, _barY2u, _tmp),			# 	barY2u -= num1
+Inst.SUB(_barY2d, _barY2d, _tmp),			# 	barY2d -= num1
 
 # 2P側下移動
 Inst.LB(_input, _addrBase, 0x4b),			# input = [addrBase + 0x4b]
 Inst.ANDI(_input, _input, 0b0001_0000),		# input &= 0b0001_0000
 Inst.BEQ(_input, 0, 4 * 3),					# if input != 0
-Inst.ADD(_barY2u, _barY2u, _num1),			# 	barY2u += 1
-Inst.ADD(_barY2d, _barY2d, _num1),			# 	barY2d += 1
+Inst.ADDI(_tmp, _num0, 1),
+Inst.ADD(_barY2u, _barY2u, _tmp),			# 	barY2u += num1
+Inst.ADD(_barY2d, _barY2d, _tmp),			# 	barY2d += num1
 
-Inst.ADDI(_tmp, _num0, 3),
-Inst.BEQ(_score1, _tmp, 4 * 2),				# if score1 == tmp -> win_initへ
-Inst.BEQ(_score2, _tmp, 4 * 1),				# if score2 == tmp -> win_initへ
 ]
 
 
 # 最後
 game_finalize = [
+Inst.ADDI(_tmp, _num0, 3),
+Inst.BEQ(_score1, _tmp, 4*2), 
+Inst.BEQ(_score2, _tmp, 4*1), 
 # ループの先頭に戻る
 Inst.JAL(0, -4 * ( len(game_loop) + 4 ) )
 ]
 
 
-# 勝利演出初期化
-win_init = [
-Inst.SB(_addrBase,0,0x01),
-Inst.SB(_addrBase,0,0x02),
-Inst.SB(_addrBase,0,0x0D),
-Inst.SB(_addrBase,0,0x0E),
-Inst.SB(_addrBase,0,0x10),
-Inst.SB(_addrBase,0,0x1B),
-Inst.SB(_addrBase,0,0x11),
-Inst.SB(_addrBase,0,0x1C),
-Inst.SB(_addrBase,0,0x12),
-Inst.SB(_addrBase,0,0x1D),
-Inst.SB(_addrBase,0,0x13),
-Inst.SB(_addrBase,0,0x1E),
-Inst.SB(_addrBase,0,0x14),
-Inst.SB(_addrBase,0,0x1F),
-Inst.SB(_addrBase,0,0x21),
-Inst.SB(_addrBase,0,0x2E),
+perform = [
 
-Inst.ANDI(_pattern0,_pattern0, 0),			# pattern0 = 0
-Inst.ANDI(_pattern1,_pattern1, 0),			# pattern1 = 0
-Inst.ANDI(_pattern2,_pattern2, 0),			# pattern2 = 0
-Inst.ANDI(_pattern3,_pattern3, 0),			# pattern3 = 0
+Inst.SB(_addrBase, 0, 0x01),
+Inst.SB(_addrBase, 0, 0x02),
+Inst.SB(_addrBase, 0, 0x0D),
+Inst.SB(_addrBase, 0, 0x0E),
+Inst.SB(_addrBase, 0, 0x10),
+Inst.SB(_addrBase, 0, 0x1B),
+Inst.SB(_addrBase, 0, 0x11),
+Inst.SB(_addrBase, 0, 0x1C),
+Inst.SB(_addrBase, 0, 0x12),
+Inst.SB(_addrBase, 0, 0x1D),
+Inst.SB(_addrBase, 0, 0x13),
+Inst.SB(_addrBase, 0, 0x1E),
+Inst.SB(_addrBase, 0, 0x14),
+Inst.SB(_addrBase, 0, 0x1F),
+Inst.SB(_addrBase, 0, 0x21),
+Inst.SB(_addrBase, 0, 0x2E),
+
+Inst.ANDI(_pattern0, _pattern0, 0),	
+Inst.ANDI(_pattern1, _pattern1, 0),
+Inst.ANDI(_pattern2, _pattern2, 0),	
+Inst.ANDI(_pattern3, _pattern3, 0),	
 
 Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
 Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
 Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
-]
 
+#WIN
+Inst.ADDI(_pattern0, 0,0b10010010),
+Inst.SLLI(_pattern0, _pattern0,0x8),
+Inst.ADDI(_pattern0, _pattern0,0b10010101),
 
-# 勝利演出ループ
-win_loop = [
+Inst.ADDI(_pattern1, 0,0b10010110),
+Inst.SLLI(_pattern1, _pattern1,0x8),
+Inst.ADDI(_pattern1, _pattern1,0b10010101),
 
-#2P
+Inst.ADDI(_pattern2, 0,0b00011010),
+Inst.SLLI(_pattern2, _pattern2,0x8),
+Inst.ADDI(_pattern2, _pattern2,0b10010101),
+
+Inst.ADDI(_pattern3, 0,0b10010010),
+Inst.SLLI(_pattern3, _pattern3,0x8),
+Inst.ADDI(_pattern3, _pattern3,0b10001010),
+
+Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
+Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
+Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
+Inst.SH(_addrBase, _pattern3, 0x46),			# [addrBase + 0x46] = pattern3
+
+#時間稼ぎ
+Inst.ADDI(_tmp, _num0, 320),
+Inst.SUB(_tmp, _tmp, _num1),
+Inst.BNE(_tmp, _num0, -8),
+
+Inst.ADDI(_tmp, _num0, 3),
+Inst.BEQ(_score2,_tmp,4*13),
+#1P
 Inst.ADDI(_pattern0, _num0, 0b0001_1100),
 Inst.SLLI(_pattern0, _pattern0, 0x8),
 Inst.ADDI(_pattern0, _pattern0, 0b0001_1000),
 
 Inst.ADDI(_pattern1, _num0, 0b0010_0100),
 Inst.SLLI(_pattern1, _pattern1, 0x8),
-Inst.ADDI(_pattern1, _pattern1, 0b0010_0100),
+Inst.ADDI(_pattern1, _pattern1, 0b0001_0000),
 
 Inst.ADDI(_pattern2, _num0, 0b0001_1100),
 Inst.SLLI(_pattern2, _pattern2, 0x8),
@@ -373,62 +446,48 @@ Inst.ADDI(_pattern2, _pattern2, 0b0001_0000),
 
 Inst.ADDI(_pattern3, _num0, 0b0000_0100),
 Inst.SLLI(_pattern3, _pattern3, 0x8),
-Inst.ADDI(_pattern3, _pattern3, 0b0011_1100),
+Inst.ADDI(_pattern3, _pattern3, 0b0011_1000),
+Inst.JAL(0,4*12),
+
+#2P
+Inst.ADDI(_pattern0,0,0b00011100),
+Inst.SLLI(_pattern0,_pattern0,0x8),
+Inst.ADDI(_pattern0,_pattern0,0b00011000),
+
+Inst.ADDI(_pattern1,0,0b00100100),
+Inst.SLLI(_pattern1,_pattern1,0x8),
+Inst.ADDI(_pattern1,_pattern1,0b00100100),
+
+Inst.ADDI(_pattern2,0,0b00011100),
+Inst.SLLI(_pattern2,_pattern2,0x8),
+Inst.ADDI(_pattern2,_pattern2,0b00010000),
+
+Inst.ADDI(_pattern3,0,0b00000100),
+Inst.SLLI(_pattern3,_pattern3,0x8),
+Inst.ADDI(_pattern3,_pattern3,0b00111100),
 
 Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
 Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
 Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
-Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
+Inst.SH(_addrBase, _pattern3, 0x46),			# [addrBase + 0x46] = pattern3
 
 #時間稼ぎ
-Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
+Inst.ADDI(_tmp, _num0, 320),
 Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -4 * 2),
+Inst.BNE(_tmp, _num0, -8),
 
-#WIN
-Inst.ADDI(_pattern0, 0, 0b1001_0010),
-Inst.SLLI(_pattern0, _pattern0, 0x8),
-Inst.ADDI(_pattern0, _pattern0, 0b1001_0101),
-
-Inst.ADDI(_pattern1, 0, 0b1001_0110),
-Inst.SLLI(_pattern1, _pattern1, 0x8),
-Inst.ADDI(_pattern1, _pattern1, 0b1001_0101),
-
-Inst.ADDI(_pattern2, 0, 0b0001_1010),
-Inst.SLLI(_pattern2, _pattern2, 0x8),
-Inst.ADDI(_pattern2, _pattern2, 0b1001_0101),
-
-Inst.ADDI(_pattern3, 0, 0b1001_0010),
-Inst.SLLI(_pattern3, _pattern3, 0x8),
-Inst.ADDI(_pattern3, _pattern3, 0b1000_1010),
-
-Inst.SH(_addrBase, _pattern0, 0x40),		# [addrBase + 0x40] = pattern0
-Inst.SH(_addrBase, _pattern1, 0x42),		# [addrBase + 0x42] = pattern1
-Inst.SH(_addrBase, _pattern2, 0x44),		# [addrBase + 0x44] = pattern2
-Inst.SH(_addrBase, _pattern3, 0x46),		# [addrBase + 0x46] = pattern3
-
-#時間稼ぎ
-Inst.ADDI(_tmp, _num0, DISPLAY_INTERVAL),
-Inst.SUB(_tmp, _tmp, _num1),
-Inst.BNE(_tmp, _num0, -4 * 2),
-
+Inst.JAL(0, -4 * 54 )
 ]
 
-win_finalize = [
-Inst.JAL(0, -4 * (len(win_loop) + 2) )
-]
-
-sys_finalize = [
-
-]
-
-program = sys_init + game_init + game_loop + game_finalize + win_init + win_loop + win_finalize + sys_finalize
+program = sys_init + game_init + game_loop + game_finalize + perform
 
 # generate assembly
 #print('')
-print('program')
-for idx, p in enumerate(program) :
-	print('{:4d}: {:08x} | {}'.format(idx + 1, p.gen_code(), p.gen_mnemonic()))
+print('sample program 3')
+for i in program :
+	print('{:08x} | {}'.format(i.gen_code(), i.gen_mnemonic()))
+
+print(len(program))
 
 # generate intel hex format
 with open(filename, 'w', encoding='utf-8') as file:
